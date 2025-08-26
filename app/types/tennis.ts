@@ -1,9 +1,5 @@
 /**
- * Interfaces para la aplicación de marcador de tenis
- */
-
-/**
- * Representa un jugador en el partido
+ * Represents a player in a tennis match
  */
 export interface Player {
   name: string;
@@ -11,7 +7,8 @@ export interface Player {
 }
 
 /**
- * Puntos dentro de un juego (game) de tenis
+ * Represents the points in a tennis game
+ * 0, 15, 30, 40, Adv
  */
 export interface GamePoints {
   player1: number;
@@ -19,7 +16,7 @@ export interface GamePoints {
 }
 
 /**
- * Juegos (games) ganados dentro de un set
+ * Represents the games won in a set
  */
 export interface Set {
   player1: number;
@@ -27,51 +24,56 @@ export interface Set {
 }
 
 /**
- * Estado completo de un partido de tenis
+ * Valid point values in tennis
+ */
+export type PointValue = '0' | '15' | '30' | '40' | 'Adv';
+
+/**
+ * Represents a player identifier
+ */
+export type PlayerId = 'player1' | 'player2';
+
+/**
+ * Represents the winner of a match
+ */
+export type MatchWinner = 'Player 1' | 'Player 2' | null;
+
+/**
+ * Represents a tennis match state
  */
 export interface Match {
   sets: Set[];
   currentSet: number;
   points: GamePoints;
-  matchWinner: string | null;
+  matchWinner: MatchWinner;
 }
 
 /**
- * Tipo para identificar a un jugador
+ * Action types for tennis match
  */
-export type PlayerKey = 'player1' | 'player2';
-
-/**
- * Valores posibles para los puntos en tenis
- */
-export const POINTS = ['0', '15', '30', '40', 'Adv'];
-
-/**
- * Props para el componente ScoreDisplay
- */
-export interface ScoreDisplayProps {
-  points: GamePoints;
+export enum TennisActionType {
+  SCORE_POINT = 'SCORE_POINT',
+  RESET_MATCH = 'RESET_MATCH',
 }
 
 /**
- * Props para el componente SetHistory
+ * Score point action
  */
-export interface SetHistoryProps {
-  sets: Set[];
+export interface ScorePointAction {
+  type: TennisActionType.SCORE_POINT;
+  payload: {
+    scorer: PlayerId;
+  };
 }
 
 /**
- * Props para el componente PlayerControls
+ * Reset match action
  */
-export interface PlayerControlsProps {
-  onPlayerScore: (player: PlayerKey) => void;
-  onReset: () => void;
-  matchWinner: string | null;
+export interface ResetMatchAction {
+  type: TennisActionType.RESET_MATCH;
 }
 
 /**
- * Props para el componente MatchResult
+ * Union type of all possible tennis actions
  */
-export interface MatchResultProps {
-  winner: string | null;
-}
+export type TennisAction = ScorePointAction | ResetMatchAction;
